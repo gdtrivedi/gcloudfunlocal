@@ -4,24 +4,38 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
+
+	"cloud.google.com/go/pubsub"
 
 	"cloud.google.com/go/functions/metadata"
 )
 
-// PubSubMessage is the payload of a Pub/Sub event.
-type PubSubMessage struct {
-	Data []byte `json:"data"`
+/*
+"message": {
+    "attributes": {
+      "greeting": "Hello from the Cloud Pub/Sub Emulator!"
+    },
+    "data": "SGVsbG8gQ2xvdWQgUHViL1N1YiEgSGVyZSBpcyBteSBtZXNzYWdlIQ==",
+    "messageId": "136969346945"
+  },
+  "subscription": "projects/myproject/subscriptions/mysubscription"
+*/
+// PubSubMessageWrapper is the payload of a Pub/Sub event.
+type PubSubMessageWrapper struct {
+	Message pubsub.Message `json:"message"`
 }
 
-func BackgroundEventFunction(ctx context.Context, m PubSubMessage) error {
+func BackgroundEventFunction(ctx context.Context, m PubSubMessageWrapper) error {
 	// Do something with ctx and data.
-	fmt.Println("msg: ", m)
-	fmt.Println("ctx: ", ctx)
-	name := string(m.Data) // Automatically decoded from base64.
-	if name == "" {
-		name = "Hard Coded World"
-	}
-	log.Printf("Hello, %s!", name)
+	//fmt.Println("msg: ", m)
+	//fmt.Println("ctx: ", ctx)
+	msgData := string(m.Message.Data) // Automatically decoded from base64.
+	//if msgData == "" {
+	//	msgData = "Hard Coded World"
+	//}
+	log.Printf("Hello, %s!", msgData)
+	log.Printf("m.Message.ID %s", m.Message.ID)
 
 	meta, err := metadata.FromContext(ctx)
 	if err != nil {
@@ -40,4 +54,9 @@ func BackgroundEventFunction(ctx context.Context, m PubSubMessage) error {
 	}
 
 	return nil
+}
+
+// HelloWorld writes "Hello, World!" to the HTTP response.
+func HelloWorld(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Hello, World!\n")
 }
