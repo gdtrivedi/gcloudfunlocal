@@ -1,4 +1,4 @@
-module github.com/gtrivedi/gcloudfunlocal/hello
+module github.com/gdtrivedi/gcloudfunlocal/hello
 
 go 1.14
 
