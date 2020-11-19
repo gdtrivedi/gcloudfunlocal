@@ -6,7 +6,7 @@ https://github.com/GoogleCloudPlatform/functions-framework-go
 
 https://cloud.google.com/pubsub/docs/emulator
 
-Ths message gets delivered in below JSON format
+The message gets delivered in below JSON format
 
 ```
 {
