@@ -5,16 +5,21 @@ import (
 	"fmt"
 	"log"
 
-	"cloud.google.com/go/pubsub"
-
 	"cloud.google.com/go/functions/metadata"
 )
 
-func BackgroundEventFunction(ctx context.Context, m *pubsub.Message) error {
+// PubSubMessage is the payload of a Pub/Sub event.
+type PubSubMessage struct {
+	Data []byte `json:"data"`
+}
+
+func BackgroundEventFunction(ctx context.Context, m PubSubMessage) error {
 	// Do something with ctx and data.
+	fmt.Println("msg: ", m)
+	fmt.Println("ctx: ", ctx)
 	name := string(m.Data) // Automatically decoded from base64.
 	if name == "" {
-		name = "World"
+		name = "Hard Coded World"
 	}
 	log.Printf("Hello, %s!", name)
 
